@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const  { cyan } = require('colors');
+const { stdin } = require('process');
 
 
 const questions = [
@@ -57,20 +58,38 @@ const inquirerMenu = async() => {
     console.log(cyan(' ============================= '));
 
     // espera a resolver la promesa con el await, es la respuesta del input
+   
     const { opcion } = await inquirer.prompt(questions);
 
     return opcion;
 }
 
-const pause = () => {
+const pause = () => ( inquirer.prompt(pauseQst) );
 
-    return inquirer.prompt(pauseQst);
+const leerInput = async ( message ) => {
 
-    //return confirmacion;
+    const question = [
+        {
+            type: 'input',
+            name: 'descripcion',
+            message,
+            validate(value) {
+                if (value.length === 0){
+                    return 'Por favor ingrese un valor';
+                }
+                return true;
+            }
+        }
+    ];
+
+    const { descripcion } = await inquirer.prompt(question);
+
+    return descripcion;
 
 }
 
 
+
 module.exports = {
-    inquirerMenu, pause
+    inquirerMenu, pause, leerInput
 }
