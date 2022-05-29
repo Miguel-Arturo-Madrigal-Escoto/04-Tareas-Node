@@ -12,7 +12,9 @@ class Tareas {
         this.listado[tarea.id] = tarea;
     }
 
-    
+    toString(){
+        return Object.values(this.listado);
+    }
 
 }
 
