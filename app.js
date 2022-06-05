@@ -1,4 +1,4 @@
-const { guardarDB } = require("./helpers/guardarArchivo");
+const { guardarDB, leerDB } = require("./helpers/guardarArchivo");
 const { inquirerMenu, pause, leerInput } = require("./helpers/inquirer");
 const Tareas = require("./models/tareas");
 //const { mostrarMenu, pausa } = require("./helpers/mostrarMenu")
@@ -10,6 +10,13 @@ const main = async() => {
 
     // recopilador de tareas
     const tareas = new Tareas();
+
+    const tareasDB = leerDB();
+
+    if (tareasDB){
+        tareas.cargarTareasArr(tareasDB);
+    }
+
 
     do {
         // esperar a que se resuelva la promesa (el usuario elige una opcion)
@@ -23,15 +30,23 @@ const main = async() => {
                 break;
 
             case '2':
-                console.log(tareas.toString());
+                tareas.listadoCompleto();
                 break;
             
+            case '3':
+                tareas.listarPendientesCompletadas();
+                break;
+            
+            case '4':
+                tareas.listarPendientesCompletadas(false);
+                break;
+         
 
         }
 
+        // al guardar las tareas se almacenan en forma de arreglo de objetos
         guardarDB(tareas.toString());
-        
-        
+             
         await pause();
 
     } while (opc !== '0');
