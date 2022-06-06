@@ -1,5 +1,6 @@
+const { cyan } = require('colors');
 const { guardarDB, leerDB } = require("./helpers/guardarArchivo");
-const { inquirerMenu, pause, leerInput } = require("./helpers/inquirer");
+const { inquirerMenu, pause, leerInput, listadoTareasBorrar, confirmar, listadoTareasCheckBox } = require("./helpers/inquirer");
 const Tareas = require("./models/tareas");
 //const { mostrarMenu, pausa } = require("./helpers/mostrarMenu")
 
@@ -39,6 +40,22 @@ const main = async() => {
             
             case '4':
                 tareas.listarPendientesCompletadas(false);
+                break;
+
+            case '5':
+                const ids = await listadoTareasCheckBox(tareas.toString())
+                tareas.toggleCompletadas(ids);
+                break;
+
+            case '6':
+                const id = await listadoTareasBorrar(tareas.toString());
+                if (id !== '0'){
+                    const ok = await confirmar('¿Está seguro?');
+                    if (ok){
+                        tareas.borrarTarea(id);
+                        console.log(cyan('Tarea borrada.'));
+                    }
+                }               
                 break;
          
 
